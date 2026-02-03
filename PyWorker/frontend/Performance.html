@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Performance | StockView</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --sidebar-color: #ffffff;
+            --accent-blue: #007aff;
+            --text-main: #1d1d1f;
+            --text-muted: #6e6e73;
+            --card-bg: #ffffff;
+            --border: #e5e7eb;
+            --green: #34c759;
+            --red: #ff3b30;
+            --neutral: #8e8e93;
+        }
+
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); }
+        .container { display: flex; min-height: 100vh; }
+
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-color);
+            border-right: 1px solid var(--border);
+            padding: 30px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .sidebar-brand { font-size: 20px; font-weight: 700; padding: 0 15px 30px; color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
+        .sidebar a {
+            display: flex; align-items: center; gap: 12px; padding: 12px 15px;
+            color: var(--text-muted); text-decoration: none; border-radius: 12px;
+            font-size: 15px; font-weight: 500; transition: 0.2s;
+        }
+        .sidebar a:hover { background: #f1f5f9; color: var(--text-main); }
+        .sidebar a.active { background: #eef6ff; color: var(--accent-blue); }
+
+        .main { flex: 1; padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        
+        .search-bar { position: relative; }
+        .search-bar input {
+            padding: 12px 20px 12px 45px; border-radius: 12px; border: 1px solid var(--border);
+            width: 350px; outline: none; transition: 0.3s; background: white; font-size: 14px;
+        }
+        .search-bar i { position: absolute; left: 18px; top: 15px; color: var(--text-muted); }
+
+        /* Metrics */
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px; }
+        .metric-card { background: white; padding: 20px; border-radius: 20px; border: 1px solid var(--border); }
+        .metric-card span { color: var(--text-muted); font-size: 13px; font-weight: 600; text-transform: uppercase; }
+        .metric-card div { font-size: 24px; font-weight: 700; margin-top: 8px; }
+        .up { color: var(--green); }
+        .down { color: var(--red); }
+
+        /* Performance Table */
+        .performance-card { background: white; border-radius: 24px; border: 1px solid var(--border); padding: 30px; }
+        .section-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        td { padding: 18px 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        
+        .symbol-tag { font-weight: 700; color: var(--accent-blue); background: #eef6ff; padding: 4px 8px; border-radius: 6px; }
+        .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .badge-bullish { background: #e6f7ed; color: var(--green); }
+        .badge-bearish { background: #ffebeb; color: var(--red); }
+        .badge-neutral { background: #f2f2f7; color: var(--neutral); }
+
+        button.btn-primary {
+            background: var(--accent-blue); color: white; border: none; padding: 12px 24px;
+            border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { display: none; }
+            .metrics-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+        <div class="sidebar-brand"><i class="fa fa-layer-group"></i> StockView</div>
+        <a href="#"><i class="fa fa-wallet"></i> Dashboard</a>
+        <a href="#" class="active"><i class="fa fa-chart-line"></i> Performance</a>
+        <a href="#"><i class="fa fa-search"></i> Market Lookup</a>
+    </div>
+
+    <div class="main">
+        <div class="header-section">
+            <div class="search-bar">
+                <i class="fa fa-search"></i>
+                <input type="text" placeholder="Search holdings...">
+            </div>
+            <button class="btn-primary" onclick="generatePDF()">Generate Report</button>
+        </div>
+
+        <div id="report-area">
+            <h2 class="section-title">Portfolio Performance Summary</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span>Total Portfolio P/L</span>
+                    <div class="up">+$12,450.00</div>
+                </div>
+                <div class="metric-card">
+                    <span>Best Performer</span>
+                    <div style="color: var(--accent-blue);">NVDA</div>
+                </div>
+                <div class="metric-card">
+                    <span>Portfolio Volatility</span>
+                    <div>1.24%</div>
+                </div>
+                <div class="metric-card">
+                    <span>Dividend Yield</span>
+                    <div>2.1%</div>
+                </div>
+            </div>
+
+            <div class="performance-card">
+                <h2 class="section-title"><i class="fa fa-bolt"></i> Holdings Sentiment Analysis</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Name</th>
+                            <th>24h Change</th>
+                            <th>News Sentiment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="symbol-tag">AAPL</span></td>
+                            <td>Apple Inc.</td>
+                            <td class="up">+1.24%</td>
+                            <td><span class="badge badge-bullish">Bullish</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol-tag">TSLA</span></td>
+                            <td>Tesla, Inc.</td>
+                            <td class="down">-2.40%</td>
+                            <td><span class="badge badge-bearish">Bearish</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol-tag">NVDA</span></td>
+                            <td>NVIDIA Corp.</td>
+                            <td class="up">+4.15%</td>
+                            <td><span class="badge badge-bullish">Bullish</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="symbol-tag">MSFT</span></td>
+                            <td>Microsoft Corp.</td>
+                            <td class="up">+0.45%</td>
+                            <td><span class="badge badge-neutral">Neutral</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function generatePDF() {
+        const element = document.getElementById('report-area');
+        const opt = {
+            margin:       10,
+            filename:     'StockView_Performance_Report.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 }, // Higher scale = better quality
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        // Run the conversion
+        html2pdf().set(opt).from(element).save();
+    }
+</script>
+
+</body>
+</html>
