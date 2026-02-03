@@ -4,175 +4,128 @@
     <meta charset="UTF-8">
     <title>Performance | StockView</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
-            --bg-color: #f8fafc;
-            --sidebar-color: #ffffff;
-            --accent-blue: #007aff;
-            --text-main: #1d1d1f;
-            --text-muted: #6e6e73;
-            --card-bg: #ffffff;
-            --border: #e5e7eb;
-            --green: #34c759;
-            --red: #ff3b30;
-            --neutral: #8e8e93;
+            --bg: #0c0e12;
+            --surface: #151922;
+            --surface-elevated: #1c2129;
+            --border: #2a3142;
+            --text: #e8eaef;
+            --text-muted: #8b92a3;
+            --accent: #22d3ee;
+            --accent-dim: #0891b2;
+            --green: #34d399;
+            --red: #f87171;
+            --neutral: #94a3b8;
         }
-
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); overflow-x: hidden; }
+        body { margin: 0; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; min-height: 100vh; }
         .container { display: flex; min-height: 100vh; }
 
-        /* Sidebar */
         .sidebar {
             width: 260px;
-            background: var(--sidebar-color);
+            background: var(--surface);
             border-right: 1px solid var(--border);
-            padding: 30px 15px;
+            padding: 28px 16px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             position: sticky;
             top: 0;
             height: 100vh;
         }
-        .sidebar-brand { font-size: 20px; font-weight: 700; padding: 0 15px 30px; color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
+        .sidebar-brand { font-size: 20px; font-weight: 700; padding: 0 14px 24px; color: var(--accent); display: flex; align-items: center; gap: 10px; }
         .sidebar a {
-            display: flex; align-items: center; gap: 12px; padding: 12px 15px;
+            display: flex; align-items: center; gap: 12px; padding: 12px 14px;
             color: var(--text-muted); text-decoration: none; border-radius: 12px;
             font-size: 15px; font-weight: 500; transition: 0.2s;
         }
-        .sidebar a:hover { background: #f1f5f9; color: var(--text-main); }
-        .sidebar a.active { background: #eef6ff; color: var(--accent-blue); }
+        .sidebar a:hover { background: var(--surface-elevated); color: var(--text); }
+        .sidebar a.active { background: rgba(34, 211, 238, 0.12); color: var(--accent); }
 
-        /* Main Content */
-        .main { flex: 1; padding: 40px; max-width: 1240px; margin: 0 auto; width: 100%; }
-        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        
-        .search-bar { position: relative; }
-        .search-bar input {
-            padding: 12px 20px 12px 45px; border-radius: 12px; border: 1px solid var(--border);
-            width: 350px; outline: none; transition: 0.3s; background: white; font-size: 14px;
-        }
-        .search-bar i { position: absolute; left: 18px; top: 15px; color: var(--text-muted); }
+        .main { flex: 1; padding: 36px 40px; max-width: 1240px; margin: 0 auto; width: 100%; }
+        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
 
-        /* Metrics */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px; }
-        .metric-card { background: white; padding: 20px; border-radius: 20px; border: 1px solid var(--border); }
-        .metric-card span { color: var(--text-muted); font-size: 13px; font-weight: 600; text-transform: uppercase; }
-        .metric-card div { font-size: 24px; font-weight: 700; margin-top: 8px; }
+        .metric-card { background: var(--surface); padding: 20px 22px; border-radius: 16px; border: 1px solid var(--border); }
+        .metric-card span { color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+        .metric-card div { font-size: 22px; font-weight: 700; margin-top: 8px; }
         .up { color: var(--green); }
         .down { color: var(--red); }
 
-        /* Performance Table */
-        .performance-card { background: white; border-radius: 24px; border: 1px solid var(--border); padding: 30px; overflow-x: auto; }
-        .section-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        
+        .performance-card { background: var(--surface); border-radius: 20px; border: 1px solid var(--border); padding: 28px; overflow-x: auto; }
+        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--text); }
+
         table { width: 100%; border-collapse: collapse; min-width: 950px; }
-        th { text-align: left; padding: 15px; color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; border-bottom: 1px solid var(--border); }
-        td { padding: 18px 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-        
-        .symbol-tag { font-weight: 700; color: var(--accent-blue); background: #eef6ff; padding: 4px 8px; border-radius: 6px; }
+        th { text-align: left; padding: 14px 16px; color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+        td { padding: 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+        tr:hover td { background: var(--surface-elevated); }
+
+        .symbol-tag { font-weight: 700; color: var(--accent); background: rgba(34, 211, 238, 0.15); padding: 4px 10px; border-radius: 8px; }
         .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-        .badge-bullish { background: #e6f7ed; color: var(--green); }
-        .badge-bearish { background: #ffebeb; color: var(--red); }
-        .badge-neutral { background: #f2f2f7; color: var(--neutral); }
+        .badge-bullish { background: rgba(52, 211, 153, 0.2); color: var(--green); }
+        .badge-bearish { background: rgba(248, 113, 113, 0.2); color: var(--red); }
+        .badge-neutral { background: rgba(148, 163, 184, 0.2); color: var(--neutral); }
 
-        /* Action Buttons */
         .action-btn {
-            border: none;
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            border: none; width: 34px; height: 34px; border-radius: 10px;
+            cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center;
         }
-        .btn-plus { background: #e6f7ed; color: var(--green); margin-right: 4px; }
-        .btn-minus { background: #ffebeb; color: var(--red); }
-        .action-btn:hover { transform: translateY(-2px); filter: brightness(0.95); }
+        .btn-plus { background: rgba(52, 211, 153, 0.2); color: var(--green); margin-right: 4px; }
+        .btn-minus { background: rgba(248, 113, 113, 0.2); color: var(--red); }
+        .action-btn:hover { transform: translateY(-2px); opacity: 0.9; }
 
-        /* Modernized Modal */
         .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+            z-index: 2000; justify-content: center; align-items: center;
         }
         .modal-content {
-            background: white;
-            padding: 35px;
-            border-radius: 30px;
-            width: 360px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
-            text-align: center;
+            background: var(--surface); padding: 32px; border-radius: 24px; width: 360px;
+            border: 1px solid var(--border); text-align: center;
             animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        @keyframes modalSlideUp {
-            from { transform: translateY(40px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .modal-header h3 { margin: 0; font-size: 22px; font-weight: 700; }
-        .modal-header p { margin: 10px 0 25px; font-size: 14px; color: var(--text-muted); }
+        @keyframes modalSlideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-header h3 { margin: 0; font-size: 20px; font-weight: 700; color: var(--text); }
+        .modal-header p { margin: 10px 0 20px; font-size: 14px; color: var(--text-muted); }
 
         .input-container { text-align: left; }
-        .input-container label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; margin-left: 5px; }
+        .input-container label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
         .input-container input {
-            width: 100%;
-            padding: 16px;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 30px;
-            outline: none;
-            transition: 0.2s;
+            width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border);
+            font-size: 16px; font-weight: 600; margin-bottom: 24px; outline: none;
+            background: var(--surface-elevated); color: var(--text);
         }
 
         .modal-footer { display: flex; gap: 12px; }
-        .btn-cancel { flex: 1; padding: 14px; border-radius: 14px; border: none; background: #f2f2f7; font-weight: 600; cursor: pointer; color: var(--text-main); }
-        .btn-confirm { flex: 2; padding: 14px; border-radius: 14px; border: none; background: var(--text-main); color: white; font-weight: 600; cursor: pointer; }
-        .btn-confirm:hover { background: var(--accent-blue); }
+        .btn-cancel { flex: 1; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: transparent; font-weight: 600; cursor: pointer; color: var(--text); }
+        .btn-confirm { flex: 2; padding: 14px; border-radius: 12px; border: none; background: var(--accent); color: var(--bg); font-weight: 600; cursor: pointer; }
+        .btn-confirm:hover { background: var(--accent-dim); }
 
-        /* Success Message Toast */
         .toast {
-            position: fixed;
-            bottom: 25px;
-            right: 30px;
-            background: #1d1d1f;
-            color: white;
-            padding: 16px 24px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transform: translateY(150%);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 3000;
+            position: fixed; bottom: 24px; right: 24px;
+            background: var(--surface-elevated); color: var(--text);
+            padding: 16px 24px; border-radius: 16px; border: 1px solid var(--border);
+            display: flex; align-items: center; gap: 12px;
+            transform: translateY(150%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 3000; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
         .toast.show { transform: translateY(0); }
         .toast i { color: var(--green); font-size: 18px; }
+        .toast.error { background: rgba(248, 113, 113, 0.15); border-color: var(--red); }
+        .toast.error i { color: var(--red); }
 
         .btn-primary {
-            background: var(--accent-blue); color: white; border: none; padding: 12px 24px;
+            background: var(--accent); color: var(--bg); border: none; padding: 12px 24px;
             border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s;
         }
+        .btn-primary:hover { background: var(--accent-dim); }
 
-        @media (max-width: 1024px) {
-            .sidebar { display: none; }
-            .metrics-grid { grid-template-columns: 1fr 1fr; }
-        }
+        @media (max-width: 1024px) { .sidebar { display: none; } .metrics-grid { grid-template-columns: 1fr 1fr; } }
     </style>
 </head>
 <body>
@@ -211,19 +164,19 @@
             <div class="metrics-grid">
                 <div class="metric-card">
                     <span>Total Portfolio P/L</span>
-                    <div class="up">+$12,450.00</div>
+                    <div th:classappend="${totalPl >= 0} ? 'up' : 'down'" th:text="${(totalPl >= 0 ? '+' : '') + '$' + #numbers.formatDecimal(totalPl, 1, 2)}"></div>
                 </div>
                 <div class="metric-card">
                     <span>Best Performer</span>
-                    <div style="color: var(--accent-blue);">NVDA</div>
+                    <div style="color: var(--accent);" th:text="${bestPerformerSymbol}">—</div>
                 </div>
                 <div class="metric-card">
                     <span>Portfolio Volatility</span>
-                    <div>1.24%</div>
+                    <div th:text="${portfolioVolatility}">—</div>
                 </div>
                 <div class="metric-card">
                     <span>Dividend Yield</span>
-                    <div>2.1%</div>
+                    <div th:text="${dividendYield}">—</div>
                 </div>
             </div>
 
@@ -233,7 +186,7 @@
                     <thead>
                         <tr>
                             <th>Symbol</th>
-                            <th>Name & Holdings</th>
+                            <th>Name &amp; Holdings</th>
                             <th>24h Change</th>
                             <th>News Sentiment</th>
                             <th>Current Price</th>
@@ -243,53 +196,26 @@
                         </tr>
                     </thead>
                     <tbody id="holdings-body">
-                        <tr data-symbol="AAPL" data-name="Apple Inc." data-price="180.00" data-owned="10">
-                            <td><span class="symbol-tag">AAPL</span></td>
+                        <tr th:each="h : ${performanceHoldings}" th:data-symbol="${h.stockSymbol}" th:data-name="${h.companyName}" th:data-price="${h.currentPrice}" th:data-owned="${h.quantity}">
+                            <td><span class="symbol-tag" th:text="${h.stockSymbol}">SYM</span></td>
                             <td>
-                                <div style="font-weight: 600;">Apple Inc.</div>
-                                <div style="font-size: 12px; color: var(--text-muted);"><span class="qty-label">10</span> Shares</div>
+                                <div style="font-weight: 600;" th:text="${h.companyName}">Company</div>
+                                <div style="font-size: 12px; color: var(--text-muted);"><span class="qty-label" th:text="${h.quantity}">0</span> Shares</div>
                             </td>
-                            <td class="up">+1.24%</td>
-                            <td><span class="badge badge-bullish">Bullish</span></td>
-                            <td style="font-weight: 600;">$180.00</td>
-                            <td class="total-invested" style="font-weight: 600;">$1,800.00</td>
-                            <td class="up" style="font-weight: 600;">+$673.50</td>
+                            <td th:classappend="${h.changePercent24h >= 0} ? 'up' : 'down'" th:text="${(h.changePercent24h >= 0 ? '+' : '') + #numbers.formatDecimal(h.changePercent24h, 1, 2) + '%'}">0%</td>
+                            <td>
+                                <span th:class="${'badge badge-' + (h.sentiment == 'Bullish' ? 'bullish' : (h.sentiment == 'Bearish' ? 'bearish' : 'neutral'))}" th:text="${h.sentiment}">Neutral</span>
+                            </td>
+                            <td style="font-weight: 600;" th:text="'$' + ${#numbers.formatDecimal(h.currentPrice, 1, 2)}">$0</td>
+                            <td class="total-invested" style="font-weight: 600;" th:text="'$' + ${#numbers.formatDecimal(h.marketValue, 1, 2)}">$0</td>
+                            <td th:classappend="${h.pl >= 0} ? 'up' : 'down'" style="font-weight: 600;" th:text="(${h.pl >= 0} ? '+' : '') + '$' + ${#numbers.formatDecimal(h.pl, 1, 2)}">$0</td>
                             <td style="text-align: right; white-space: nowrap;">
                                 <button class="action-btn btn-plus" onclick="openTradeModal(this, 'plus')"><i class="fa fa-plus"></i></button>
                                 <button class="action-btn btn-minus" onclick="openTradeModal(this, 'minus')"><i class="fa fa-minus"></i></button>
                             </td>
                         </tr>
-                        <tr data-symbol="TSLA" data-name="Tesla, Inc." data-price="240.00" data-owned="5">
-                            <td><span class="symbol-tag">TSLA</span></td>
-                            <td>
-                                <div style="font-weight: 600;">Tesla, Inc.</div>
-                                <div style="font-size: 12px; color: var(--text-muted);"><span class="qty-label">5</span> Shares</div>
-                            </td>
-                            <td class="down">-2.40%</td>
-                            <td><span class="badge badge-bearish">Bearish</span></td>
-                            <td style="font-weight: 600;">$240.00</td>
-                            <td class="total-invested" style="font-weight: 600;">$1,200.00</td>
-                            <td class="up" style="font-weight: 600;">+$273.50</td>
-                            <td style="text-align: right; white-space: nowrap;">
-                                <button class="action-btn btn-plus" onclick="openTradeModal(this, 'plus')"><i class="fa fa-plus"></i></button>
-                                <button class="action-btn btn-minus" onclick="openTradeModal(this, 'minus')"><i class="fa fa-minus"></i></button>
-                            </td>
-                        </tr>
-                        <tr data-symbol="NVDA" data-name="NVIDIA Corp." data-price="450.00" data-owned="8">
-                            <td><span class="symbol-tag">NVDA</span></td>
-                            <td>
-                                <div style="font-weight: 600;">NVIDIA Corp.</div>
-                                <div style="font-size: 12px; color: var(--text-muted);"><span class="qty-label">8</span> Shares</div>
-                            </td>
-                            <td class="up">+4.15%</td>
-                            <td><span class="badge badge-bullish">Bullish</span></td>
-                            <td style="font-weight: 600;">$450.00</td>
-                            <td class="total-invested" style="font-weight: 600;">$3,600.00</td>
-                            <td class="up" style="font-weight: 600;">+$1,120.00</td>
-                            <td style="text-align: right; white-space: nowrap;">
-                                <button class="action-btn btn-plus" onclick="openTradeModal(this, 'plus')"><i class="fa fa-plus"></i></button>
-                                <button class="action-btn btn-minus" onclick="openTradeModal(this, 'minus')"><i class="fa fa-minus"></i></button>
-                            </td>
+                        <tr th:if="${#lists.isEmpty(performanceHoldings)}">
+                            <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">No holdings yet. Add stocks from Market Lookup or Dashboard.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -325,28 +251,30 @@
 <script>
     let activeRow = null;
     let activeAction = '';
-    const apikey = `V58XXMSS1AR1L8TK`;
 
-    function showToast(message) {
+    function showToast(message, isError) {
         const toast = document.getElementById('successToast');
-        document.getElementById('toastMessage').innerText = message;
+        const msgEl = document.getElementById('toastMessage');
+        msgEl.innerText = message;
+        toast.classList.toggle('error', !!isError);
         toast.classList.add('show');
         setTimeout(() => {
-            toast.classList.remove('show');
+            toast.classList.remove('show', 'error');
         }, 3000);
     }
 
     function openTradeModal(button, action) {
         activeRow = button.closest('tr');
+        if (!activeRow || !activeRow.dataset.symbol) return;
         activeAction = action;
-        
         const symbol = activeRow.dataset.symbol;
-        const name = activeRow.dataset.name;
-        const owned = activeRow.dataset.owned;
+        const name = activeRow.dataset.name || symbol;
+        const owned = activeRow.dataset.owned || '0';
 
         document.getElementById('modalTitle').innerText = action === 'plus' ? 'Add Shares' : 'Sell Shares';
-        document.getElementById('modalStockInfo').innerText = `${name} (${symbol}) • Currently holding: ${owned}`;
+        document.getElementById('modalStockInfo').innerText = name + ' (' + symbol + ') • Currently holding: ' + owned;
         document.getElementById('tradeModal').style.display = 'flex';
+        document.getElementById('tradeQuantity').value = 1;
         document.getElementById('tradeQuantity').focus();
     }
 
@@ -357,50 +285,42 @@
 
     function executeTrade() {
         const quantityInput = document.getElementById('tradeQuantity');
-        const changeAmount = parseInt(quantityInput.value);
-        
+        const changeAmount = parseInt(quantityInput.value, 10);
         if (isNaN(changeAmount) || changeAmount <= 0) {
             alert("Please enter a valid quantity.");
             return;
         }
-
-        let currentOwned = parseInt(activeRow.dataset.owned);
-        const pricePerShare = parseFloat(activeRow.dataset.price);
         const symbol = activeRow.dataset.symbol;
+        const currentOwned = parseInt(activeRow.dataset.owned || 0, 10);
+        if (activeAction === 'minus' && changeAmount > currentOwned) {
+            alert("You cannot sell more shares than you own.");
+            return;
+        }
 
-        if (activeAction === 'plus') {
-            currentOwned += changeAmount;
-            showToast(`Added ${changeAmount} shares of ${symbol}`);
-        } else {
-            if (changeAmount > currentOwned) {
-                alert("Error: You cannot sell more shares than you own.");
-                return;
+        const endpoint = activeAction === 'plus' ? '/api/trade/buy' : '/api/trade/sell';
+        fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ symbol: symbol, quantity: changeAmount })
+        })
+        .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, data: data }; }); })
+        .then(function(result) {
+            if (result.ok && result.data.success) {
+                showToast(result.data.message || 'Trade completed.');
+                closeModal();
+                window.location.reload();
+            } else {
+                showToast(result.data.message || 'Trade failed.', true);
             }
-            currentOwned -= changeAmount;
-            showToast(`Sold ${changeAmount} shares of ${symbol}`);
-        }
-
-        if (currentOwned <= 0) {
-            activeRow.style.transition = '0.3s';
-            activeRow.style.opacity = '0';
-            activeRow.style.transform = 'translateX(20px)';
-            setTimeout(() => activeRow.remove(), 300);
-        } else {
-            activeRow.dataset.owned = currentOwned;
-            activeRow.querySelector('.qty-label').innerText = currentOwned;
-            
-            const newValue = (currentOwned * pricePerShare).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            });
-            activeRow.querySelector('.total-invested').innerText = newValue;
-        }
-        closeModal();
+        })
+        .catch(function() {
+            showToast('Network error. Please try again.', true);
+        });
     }
 
     window.onclick = function(event) {
-        if (event.target == document.getElementById('tradeModal')) closeModal();
-    }
+        if (event.target === document.getElementById('tradeModal')) closeModal();
+    };
 
     function generatePDF() {
         const element = document.getElementById('report-area');
@@ -413,8 +333,6 @@
         };
         html2pdf().set(opt).from(element).save();
     }
-
-    
 </script>
 
 </body>

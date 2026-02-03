@@ -10,52 +10,51 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "transactionswrtstock")
+@Table(name = "transactions_wrt_stock", indexes = { @jakarta.persistence.Index(columnList = "stock_symbol") })
 public class TransactionsWRTStock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transaction_id")
-    private Long TransactionId;
+    private Long transactionId;
 
-    @Column(name = "dateOfTransaction")
-    private LocalDate DateOfTransaction;
+    @Column(name = "transaction_date", nullable = false)
+    private LocalDate transactionDate;
 
-    @Column(name = "stock")
-    private String Stock;
+    @Column(name = "stock_symbol", nullable = false)
+    private String stockSymbol;
 
-    @Column(name = "value")
-    private Double Value;
+    @Column(name = "transaction_value", nullable = false)
+    private Double transactionValue;
+
+    public TransactionsWRTStock() {
+    }
 
     public Long getTransactionId() {
-        return TransactionId;
+        return transactionId;
     }
 
-    public void setTransactionId(Long transactionId) {
-        this.TransactionId = transactionId;
+    public LocalDate getTransactionDate() {
+        return transactionDate;
     }
 
-    public LocalDate getDateOfTransaction() {
-        return DateOfTransaction;
+    public void setTransactionDate(LocalDate transactionDate) {
+        this.transactionDate = transactionDate;
     }
 
-    public void setDateOfTransaction(LocalDate dateOfTransaction) {
-        this.DateOfTransaction = dateOfTransaction;
+    public String getStockSymbol() {
+        return stockSymbol;
     }
 
-    public String getStock() {
-        return Stock;
+    public void setStockSymbol(String stockSymbol) {
+        this.stockSymbol = stockSymbol;
     }
 
-    public void setStock(String stock) {
-        this.Stock = stock;
+    public Double getTransactionValue() {
+        return transactionValue;
     }
 
-    public Double getValue() {
-        return Value;
-    }
-
-    public void setValue(Double value) {
-        this.Value = value;
+    public void setTransactionValue(Double transactionValue) {
+        this.transactionValue = transactionValue;
     }
 }

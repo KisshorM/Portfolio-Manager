@@ -100,6 +100,3 @@ def get_historical_data(ticker_symbol, interval, period="3mo"):
         "data": data_records,
         "graph": f"data:image/png;base64,{image_base64}"
     }
-
-def get_live_price(ticker_symbol):
-    return yf.Ticker(ticker_symbol).fast_info['last_price']

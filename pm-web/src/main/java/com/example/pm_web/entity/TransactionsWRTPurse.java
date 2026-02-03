@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "transactionswrtpurse")
+@Table(name = "transactions_wrt_purse", indexes = { @jakarta.persistence.Index(columnList = "transaction_date") })
 public class TransactionsWRTPurse {
 
     @Id
@@ -18,44 +18,43 @@ public class TransactionsWRTPurse {
     @Column(name = "transaction_id")
     private Long transactionId;
 
-    @Column(name = "dateOfTransaction")
-    private LocalDate dateOfTransaction;
+    @Column(name = "transaction_date", nullable = false)
+    private LocalDate transactionDate;
 
-    @Column(name = "value")
-    private Double value;
+    @Column(name = "transaction_value", nullable = false)
+    private Double transactionValue;
 
-    @Column(name = "purseValue")
-    private Double purseValue;
+    @Column(name = "purse_value_after", nullable = false)
+    private Double purseValueAfter;
+
+    public TransactionsWRTPurse() {
+    }
 
     public Long getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(Long transactionId) {
-        this.transactionId = transactionId;
+    public LocalDate getTransactionDate() {
+        return transactionDate;
     }
 
-    public LocalDate getDateOfTransaction() {
-        return dateOfTransaction;
+    public void setTransactionDate(LocalDate transactionDate) {
+        this.transactionDate = transactionDate;
     }
 
-    public void setDateOfTransaction(LocalDate dateOfTransaction) {
-        this.dateOfTransaction = dateOfTransaction;
+    public Double getTransactionValue() {
+        return transactionValue;
     }
 
-    public Double getValue() {
-        return value;
+    public void setTransactionValue(Double transactionValue) {
+        this.transactionValue = transactionValue;
     }
 
-    public void setValue(Double value) {
-        this.value = value;
+    public Double getPurseValueAfter() {
+        return purseValueAfter;
     }
 
-    public Double getPurseValue() {
-        return purseValue;
-    }
-
-    public void setPurseValue(Double purseValue) {
-        this.purseValue = purseValue;
+    public void setPurseValueAfter(Double purseValueAfter) {
+        this.purseValueAfter = purseValueAfter;
     }
 }
