@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Market Lookup | StockView</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --sidebar-color: #ffffff;
+            --accent-blue: #007aff;
+            --text-main: #1d1d1f;
+            --text-muted: #6e6e73;
+            --card-bg: #ffffff;
+            --border: #e5e7eb;
+            --green: #34c759;
+            --red: #ff3b30;
+        }
+
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); }
+
+        .container { display: flex; min-height: 100vh; }
+
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-color);
+            border-right: 1px solid var(--border);
+            padding: 30px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .sidebar-brand { font-size: 20px; font-weight: 700; padding: 0 15px 30px; color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
+
+        .sidebar a {
+            display: flex; align-items: center; gap: 12px; padding: 12px 15px;
+            color: var(--text-muted); text-decoration: none; border-radius: 12px;
+            font-size: 15px; font-weight: 500; transition: 0.2s;
+        }
+
+        .sidebar a:hover { background: #f1f5f9; color: var(--text-main); }
+        .sidebar a.active { background: #eef6ff; color: var(--accent-blue); }
+
+        .main { flex: 1; padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        
+        .search-bar { position: relative; }
+        .search-bar input {
+            padding: 12px 20px 12px 45px; border-radius: 12px; border: 1px solid var(--border);
+            width: 350px; outline: none; transition: 0.3s; background: white; font-size: 14px;
+        }
+        .search-bar i { position: absolute; left: 18px; top: 15px; color: var(--text-muted); }
+
+        .section-title { font-size: 22px; font-weight: 700; margin: 0 0 20px; display: flex; align-items: center; gap: 10px; }
+        .news-list { display: grid; gap: 12px; }
+        .news-card {
+            background: white; padding: 20px; border-radius: 16px; border: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center; transition: 0.2s; text-decoration: none; color: inherit;
+        }
+        .news-card:hover { border-color: var(--accent-blue); background: #fafafa; }
+        .news-content { flex: 1; }
+        .news-title { font-weight: 600; font-size: 16px; margin-bottom: 4px; color: var(--text-main); }
+        .news-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+        .news-meta { font-size: 12px; color: var(--accent-blue); font-weight: 500; }
+
+        button.btn-primary {
+            background: var(--accent-blue); color: white; border: none; padding: 12px 24px;
+            border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s;
+        }
+        button.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        @media (max-width: 1024px) {
+            .sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- <div class="sidebar">
+        <div class="sidebar-brand"><i class="fa fa-layer-group"></i> StockView</div>
+        <a href="#"><i class="fa fa-wallet"></i> Dashboard</a>
+        <a href="#"><i class="fa fa-chart-line"></i> Performance</a>
+        <a href="#" class="active"><i class="fa fa-search"></i> Market Lookup</a>
+    </div> -->
+
+    <div class="sidebar">
+        <div class="sidebar-brand"><i class="fa fa-layer-group"></i> StockView</div>
+        <!-- <a href="#" class="active"><i class="fa fa-wallet"></i> Dashboard</a>
+        <a href="#"><i class="fa fa-chart-line"></i> Performance</a>
+        <a href="#"><i class="fa fa-search"></i> Market Lookup</a> -->
+
+        <!-- <a th:href="@{/dashboard}" 
+        th:classappend="${#ctx.request.requestURI == '/dashboard' ? 'active' : ''}">
+            <i class="fa fa-wallet"></i> Dashboard
+        </a>
+
+        <a th:href="@{/performance}" 
+        th:classappend="${#ctx.request.requestURI == '/performance' ? 'active' : ''}">
+            <i class="fa fa-chart-line"></i> Performance
+        </a>
+
+        <a th:href="@{/market}" 
+        th:classappend="${#ctx.request.requestURI == '/market' ? 'active' : ''}">
+            <i class="fa fa-search"></i> Market Lookup
+        </a> -->
+
+        <a th:href="@{/dashboard}" 
+        th:classappend="${activePage == 'dashboard' ? 'active' : ''}">
+            <i class="fa fa-wallet"></i> Dashboard
+        </a>
+        
+        <a th:href="@{/performance}" 
+        th:classappend="${activePage == 'performance' ? 'active' : ''}">
+            <i class="fa fa-chart-line"></i> Performance
+        </a>
+        
+        <a th:href="@{/market}" 
+        th:classappend="${activePage == 'market' ? 'active' : ''}">
+            <i class="fa fa-search"></i> Market Lookup
+        </a>
+    </div>
+
+    <div class="main">
+        <div class="header-section">
+            <div class="search-bar">
+                <i class="fa fa-search"></i>
+                <input type="text" placeholder="Search Apple, Microsoft, Tesla...">
+            </div>
+        </div>
+
+        <h2 class="section-title"><i class="fa fa-newspaper"></i> Latest Market Insights</h2>
+        <div class="news-list">
+            <a href="https://www.alphaspread.com/market-news/earnings/apple-reports-record-q1-results-driven-by-iphone-demand-and-china-rebound" target="_blank" class="news-card">
+                <div class="news-content">
+                    <div class="news-title">Apple Reports Record Q1 Results Driven by iPhone Demand</div>
+                    <div class="news-desc">Revenue hit $143.8 billion as iPhone 17 sales surged, significantly outpacing analyst estimates.</div>
+                    <div class="news-meta">AlphaStreet • 1 day ago</div>
+                </div>
+                <i class="fa fa-external-link" style="color:#ccc"></i>
+            </a>
+            <a href="https://www.fool.com/investing/2026/01/31/3-reasons-to-buy-apple-stock-and-1-reason-to-think/" target="_blank" class="news-card">
+                <div class="news-content">
+                    <div class="news-title">3 Reasons to Buy Apple Stock -- and 1 Reason to Think Twice</div>
+                    <div class="news-desc">Success in China and the Google Gemini-Siri upgrade offer growth, but supply constraints remain a risk.</div>
+                    <div class="news-meta">The Motley Fool • 3 hours ago</div>
+                </div>
+                <i class="fa fa-external-link" style="color:#ccc"></i>
+            </a>
+            <a href="https://www.fool.com/investing/2026/01/30/apple-vs-meta-platforms-which-magnificent-seven-st/" target="_blank" class="news-card">
+                <div class="news-content">
+                    <div class="news-title">Apple vs. Meta Platforms: Which "Magnificent Seven" Stock Is Better?</div>
+                    <div class="news-desc">Analyzing the accelerated revenue growth of Apple against Meta's high infrastructure spending.</div>
+                    <div class="news-meta">The Motley Fool • 1 day ago</div>
+                </div>
+                <i class="fa fa-external-link" style="color:#ccc"></i>
+            </a>
+            <a href="https://sg.news.yahoo.com/google-launch-ai-glasses-2026-125434465.html" target="_blank" class="news-card">
+                <div class="news-content">
+                    <div class="news-title">Google to launch AI glasses in 2026; Apple entry looms</div>
+                    <div class="news-desc">The smart glasses market is expected to quadruple in 2026 as tech giants pivot to AI hardware.</div>
+                    <div class="news-meta">Yahoo Finance • 1 day ago</div>
+                </div>
+                <i class="fa fa-external-link" style="color:#ccc"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

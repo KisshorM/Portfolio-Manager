@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | StockView</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --sidebar-color: #ffffff;
+            --accent-blue: #007aff;
+            --text-main: #1d1d1f;
+            --text-muted: #6e6e73;
+            --card-bg: #ffffff;
+            --border: #e5e7eb;
+            --green: #34c759;
+            --red: #ff3b30;
+        }
+
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); }
+
+        .container { display: flex; min-height: 100vh; }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-color);
+            border-right: 1px solid var(--border);
+            padding: 30px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        .sidebar-brand { font-size: 20px; font-weight: 700; padding: 0 15px 30px; color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
+        .sidebar a {
+            display: flex; align-items: center; gap: 12px; padding: 12px 15px;
+            color: var(--text-muted); text-decoration: none; border-radius: 12px;
+            font-size: 15px; font-weight: 500; transition: 0.2s;
+        }
+        .sidebar a:hover { background: #f1f5f9; color: var(--text-main); }
+        .sidebar a.active { background: #eef6ff; color: var(--accent-blue); }
+
+        /* Main Content */
+        .main { flex: 1; padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+        /* Top Bar */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .portfolio-overview { display: flex; gap: 30px; align-items: center; }
+        .overview-item span { font-size: 13px; color: var(--text-muted); display: block; }
+        .overview-item b { font-size: 20px; }
+        .btn-group { display: flex; gap: 10px; }
+
+        /* Grid Layout */
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px; margin-bottom: 24px; }
+        .card { background: white; padding: 24px; border-radius: 20px; border: 1px solid var(--border); }
+        .card-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: var(--text-main); }
+
+        /* Visuals Placeholders */
+        .chart-placeholder { width: 100%; height: 200px; background: #f9fafb; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); border: 1px dashed var(--border); }
+
+        /* Table Styles */
+        .holdings-card { width: 100%; margin-bottom: 24px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 12px; color: var(--text-muted); font-size: 12px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        td { padding: 16px 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        .symbol { font-weight: 700; color: var(--accent-blue); }
+        .positive { color: var(--green); font-weight: 600; }
+
+        /* Value Cards */
+        .value-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .value-card { background: white; padding: 20px; border-radius: 16px; border: 1px solid var(--border); }
+        .value-card span { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+        .value-card div { font-size: 18px; font-weight: 700; margin-top: 8px; }
+
+        button.btn-outline { background: white; color: var(--text-main); border: 1px solid var(--border); padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 13px; }
+        button.btn-primary { background: var(--accent-blue); color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 13px; }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .value-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+        <div class="sidebar-brand"><i class="fa fa-layer-group"></i> StockView</div>
+        <!-- <a href="#" class="active"><i class="fa fa-wallet"></i> Dashboard</a>
+        <a href="#"><i class="fa fa-chart-line"></i> Performance</a>
+        <a href="#"><i class="fa fa-search"></i> Market Lookup</a> -->
+
+        <!-- <a th:href="@{/dashboard}" 
+        th:classappend="${#ctx.request.requestURI == '/dashboard' ? 'active' : ''}">
+            <i class="fa fa-wallet"></i> Dashboard
+        </a>
+
+        <a th:href="@{/performance}" 
+        th:classappend="${#ctx.request.requestURI == '/performance' ? 'active' : ''}">
+            <i class="fa fa-chart-line"></i> Performance
+        </a>
+
+        <a th:href="@{/market}" 
+        th:classappend="${#ctx.request.requestURI == '/market' ? 'active' : ''}">
+            <i class="fa fa-search"></i> Market Lookup
+        </a> -->
+
+        <a th:href="@{/dashboard}" 
+        th:classappend="${activePage == 'dashboard' ? 'active' : ''}">
+            <i class="fa fa-wallet"></i> Dashboard
+        </a>
+        
+        <a th:href="@{/performance}" 
+        th:classappend="${activePage == 'performance' ? 'active' : ''}">
+            <i class="fa fa-chart-line"></i> Performance
+        </a>
+        
+        <a th:href="@{/market}" 
+        th:classappend="${activePage == 'market' ? 'active' : ''}">
+            <i class="fa fa-search"></i> Market Lookup
+        </a>
+    </div>
+
+    <div class="main">
+        <div class="top-bar">
+            <div class="portfolio-overview">
+                <div class="overview-item">
+                    <span>Total Portfolio Value</span>
+                    <b style="color: var(--green);">$152,430.25</b>
+                </div>
+                <div class="overview-item">
+                    <span>Total Return</span>
+                    <b style="color: var(--green);">+12.8%</b>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn-outline">+ Add Asset</button>
+                <button class="btn-outline">Remove Asset</button>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-title">Asset Allocation</div>
+                <div class="chart-placeholder">
+                    <i class="fa fa-chart-pie fa-3x" style="opacity: 0.2; margin-bottom: 10px;"></i>
+                </div>
+                <div style="display: flex; justify-content: space-around; margin-top: 20px; font-size: 12px; font-weight: 600;">
+                    <span><i class="fa fa-circle" style="color: var(--accent-blue);"></i> Stocks</span>
+                    <span><i class="fa fa-circle" style="color: var(--green);"></i> Bonds</span>
+                    <span><i class="fa fa-circle" style="color: #f59e0b;"></i> Crypto</span>
+                    <span><i class="fa fa-circle" style="color: #94a3b8;"></i> Cash</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Portfolio Performance</div>
+                <div class="chart-placeholder">
+                    <i class="fa fa-chart-line fa-3x" style="opacity: 0.2;"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="card holdings-card">
+            <div class="card-title">Your Holdings</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Company Name</th>
+                        <th>Shares</th>
+                        <th>Current Price</th>
+                        <th>Cost Basis</th>
+                        <th>Market Value</th>
+                        <th>P/L</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="symbol">AAPL</td>
+                        <td>Apple Inc.</td>
+                        <td>35</td>
+                        <td>$145.32</td>
+                        <td>$120.00</td>
+                        <td>$5,086.20</td>
+                        <td class="positive">+$886.20</td>
+                    </tr>
+                    <tr>
+                        <td class="symbol">TSLA</td>
+                        <td>Tesla Inc.</td>
+                        <td>20</td>
+                        <td>$720.15</td>
+                        <td>$650.00</td>
+                        <td>$14,403.00</td>
+                        <td class="positive">+$1,402.00</td>
+                    </tr>
+                    <tr>
+                        <td class="symbol">AMZN</td>
+                        <td>Amazon.com Inc.</td>
+                        <td>10</td>
+                        <td>$3,340.50</td>
+                        <td>$3,100.00</td>
+                        <td>$33,405.00</td>
+                        <td class="positive">+$2,405.00</td>
+                    </tr>
+                    <tr>
+                        <td class="symbol">GOOGL</td>
+                        <td>Alphabet Inc.</td>
+                        <td>8</td>
+                        <td>$2,750.75</td>
+                        <td>$2,500.00</td>
+                        <td>$22,006.00</td>
+                        <td class="positive">+$2,006.00</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="margin-top: 20px;">
+                <a href="#" style="color: var(--accent-blue); text-decoration: none; font-size: 13px; font-weight: 600;">Add or Remove Holdings</a>
+            </div>
+        </div>
+
+        <div class="value-grid">
+            <div class="value-card">
+                <span>Cash Balance</span>
+                <div style="color: var(--accent-blue);">$5,200.00</div>
+            </div>
+            <div class="value-card">
+                <span>Stocks Value</span>
+                <div style="color: var(--green);">$110,900.20</div>
+            </div>
+            <div class="value-card">
+                <span>Bonds Value</span>
+                <div style="color: var(--green);">$25,330.00</div>
+            </div>
+            <div class="value-card">
+                <span>Crypto Value</span>
+                <div>$11,000.05</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
