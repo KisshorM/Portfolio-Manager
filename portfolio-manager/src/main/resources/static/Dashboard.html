@@ -93,39 +93,9 @@
 <div class="container">
     <div class="sidebar">
         <div class="sidebar-brand"><i class="fa fa-layer-group"></i> StockView</div>
-        <!-- <a href="#" class="active"><i class="fa fa-wallet"></i> Dashboard</a>
+        <a href="#" class="active"><i class="fa fa-wallet"></i> Dashboard</a>
         <a href="#"><i class="fa fa-chart-line"></i> Performance</a>
-        <a href="#"><i class="fa fa-search"></i> Market Lookup</a> -->
-
-        <!-- <a th:href="@{/dashboard}" 
-        th:classappend="${#ctx.request.requestURI == '/dashboard' ? 'active' : ''}">
-            <i class="fa fa-wallet"></i> Dashboard
-        </a>
-
-        <a th:href="@{/performance}" 
-        th:classappend="${#ctx.request.requestURI == '/performance' ? 'active' : ''}">
-            <i class="fa fa-chart-line"></i> Performance
-        </a>
-
-        <a th:href="@{/market}" 
-        th:classappend="${#ctx.request.requestURI == '/market' ? 'active' : ''}">
-            <i class="fa fa-search"></i> Market Lookup
-        </a> -->
-
-        <a th:href="@{/}" 
-        th:classappend="${activePage == 'dashboard' ? 'active' : ''}">
-            <i class="fa fa-wallet"></i> Dashboard
-        </a>
-        
-        <a th:href="@{/performance}" 
-        th:classappend="${activePage == 'performance' ? 'active' : ''}">
-            <i class="fa fa-chart-line"></i> Performance
-        </a>
-        
-        <a th:href="@{/market}" 
-        th:classappend="${activePage == 'market' ? 'active' : ''}">
-            <i class="fa fa-search"></i> Market Lookup
-        </a>
+        <a href="#"><i class="fa fa-search"></i> Market Lookup</a>
     </div>
 
     <div class="main">

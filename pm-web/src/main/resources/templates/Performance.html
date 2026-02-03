@@ -24,9 +24,10 @@
         }
 
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); overflow-x: hidden; }
         .container { display: flex; min-height: 100vh; }
 
+        /* Sidebar */
         .sidebar {
             width: 260px;
             background: var(--sidebar-color);
@@ -39,7 +40,6 @@
             top: 0;
             height: 100vh;
         }
-
         .sidebar-brand { font-size: 20px; font-weight: 700; padding: 0 15px 30px; color: var(--accent-blue); display: flex; align-items: center; gap: 10px; }
         .sidebar a {
             display: flex; align-items: center; gap: 12px; padding: 12px 15px;
@@ -49,7 +49,8 @@
         .sidebar a:hover { background: #f1f5f9; color: var(--text-main); }
         .sidebar a.active { background: #eef6ff; color: var(--accent-blue); }
 
-        .main { flex: 1; padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        /* Main Content */
+        .main { flex: 1; padding: 40px; max-width: 1240px; margin: 0 auto; width: 100%; }
         .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         
         .search-bar { position: relative; }
@@ -68,10 +69,10 @@
         .down { color: var(--red); }
 
         /* Performance Table */
-        .performance-card { background: white; border-radius: 24px; border: 1px solid var(--border); padding: 30px; }
+        .performance-card { background: white; border-radius: 24px; border: 1px solid var(--border); padding: 30px; overflow-x: auto; }
         .section-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
         
-        table { width: 100%; border-collapse: collapse; }
+        table { width: 100%; border-collapse: collapse; min-width: 950px; }
         th { text-align: left; padding: 15px; color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; border-bottom: 1px solid var(--border); }
         td { padding: 18px 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
         
@@ -81,7 +82,89 @@
         .badge-bearish { background: #ffebeb; color: var(--red); }
         .badge-neutral { background: #f2f2f7; color: var(--neutral); }
 
-        button.btn-primary {
+        /* Action Buttons */
+        .action-btn {
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-plus { background: #e6f7ed; color: var(--green); margin-right: 4px; }
+        .btn-minus { background: #ffebeb; color: var(--red); }
+        .action-btn:hover { transform: translateY(-2px); filter: brightness(0.95); }
+
+        /* Modernized Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 35px;
+            border-radius: 30px;
+            width: 360px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalSlideUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-header h3 { margin: 0; font-size: 22px; font-weight: 700; }
+        .modal-header p { margin: 10px 0 25px; font-size: 14px; color: var(--text-muted); }
+
+        .input-container { text-align: left; }
+        .input-container label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; margin-left: 5px; }
+        .input-container input {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .modal-footer { display: flex; gap: 12px; }
+        .btn-cancel { flex: 1; padding: 14px; border-radius: 14px; border: none; background: #f2f2f7; font-weight: 600; cursor: pointer; color: var(--text-main); }
+        .btn-confirm { flex: 2; padding: 14px; border-radius: 14px; border: none; background: var(--text-main); color: white; font-weight: 600; cursor: pointer; }
+        .btn-confirm:hover { background: var(--accent-blue); }
+
+        /* Success Message Toast */
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            right: 30px;
+            background: #1d1d1f;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: translateY(150%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 3000;
+        }
+        .toast.show { transform: translateY(0); }
+        .toast i { color: var(--green); font-size: 18px; }
+
+        .btn-primary {
             background: var(--accent-blue); color: white; border: none; padding: 12px 24px;
             border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s;
         }
@@ -95,35 +178,10 @@
 <body>
 
 <div class="container">
-    <!-- <div class="sidebar">
-        <div class="sidebar-brand"><i class="fa fa-layer-group"></i> StockView</div>
-        <a href="#"><i class="fa fa-wallet"></i> Dashboard</a>
-        <a href="#" class="active"><i class="fa fa-chart-line"></i> Performance</a>
-        <a href="#"><i class="fa fa-search"></i> Market Lookup</a>
-    </div> -->
-
     <div class="sidebar">
         <div class="sidebar-brand"><i class="fa fa-layer-group"></i> StockView</div>
-        <!-- <a href="#" class="active"><i class="fa fa-wallet"></i> Dashboard</a>
-        <a href="#"><i class="fa fa-chart-line"></i> Performance</a>
-        <a href="#"><i class="fa fa-search"></i> Market Lookup</a> -->
-
-        <!-- <a th:href="@{/dashboard}" 
-        th:classappend="${#ctx.request.requestURI == '/dashboard' ? 'active' : ''}">
-            <i class="fa fa-wallet"></i> Dashboard
-        </a>
-
-        <a th:href="@{/performance}" 
-        th:classappend="${#ctx.request.requestURI == '/performance' ? 'active' : ''}">
-            <i class="fa fa-chart-line"></i> Performance
-        </a>
-
-        <a th:href="@{/market}" 
-        th:classappend="${#ctx.request.requestURI == '/market' ? 'active' : ''}">
-            <i class="fa fa-search"></i> Market Lookup
-        </a> -->
-
-        <a th:href="@{/dashboard}" 
+        
+        <a th:href="@{/}" 
         th:classappend="${activePage == 'dashboard' ? 'active' : ''}">
             <i class="fa fa-wallet"></i> Dashboard
         </a>
@@ -141,10 +199,10 @@
 
     <div class="main">
         <div class="header-section">
-            <div class="search-bar">
+            <!-- <div class="search-bar">
                 <i class="fa fa-search"></i>
                 <input type="text" placeholder="Search holdings...">
-            </div>
+            </div> -->
             <button class="btn-primary" onclick="generatePDF()">Generate Report</button>
         </div>
 
@@ -175,35 +233,63 @@
                     <thead>
                         <tr>
                             <th>Symbol</th>
-                            <th>Name</th>
+                            <th>Name & Holdings</th>
                             <th>24h Change</th>
                             <th>News Sentiment</th>
+                            <th>Current Price</th>
+                            <th>Total Value</th>
+                            <th>Total Profit</th>
+                            <th style="text-align: right;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
+                    <tbody id="holdings-body">
+                        <tr data-symbol="AAPL" data-name="Apple Inc." data-price="180.00" data-owned="10">
                             <td><span class="symbol-tag">AAPL</span></td>
-                            <td>Apple Inc.</td>
+                            <td>
+                                <div style="font-weight: 600;">Apple Inc.</div>
+                                <div style="font-size: 12px; color: var(--text-muted);"><span class="qty-label">10</span> Shares</div>
+                            </td>
                             <td class="up">+1.24%</td>
                             <td><span class="badge badge-bullish">Bullish</span></td>
+                            <td style="font-weight: 600;">$180.00</td>
+                            <td class="total-invested" style="font-weight: 600;">$1,800.00</td>
+                            <td class="up" style="font-weight: 600;">+$673.50</td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <button class="action-btn btn-plus" onclick="openTradeModal(this, 'plus')"><i class="fa fa-plus"></i></button>
+                                <button class="action-btn btn-minus" onclick="openTradeModal(this, 'minus')"><i class="fa fa-minus"></i></button>
+                            </td>
                         </tr>
-                        <tr>
+                        <tr data-symbol="TSLA" data-name="Tesla, Inc." data-price="240.00" data-owned="5">
                             <td><span class="symbol-tag">TSLA</span></td>
-                            <td>Tesla, Inc.</td>
+                            <td>
+                                <div style="font-weight: 600;">Tesla, Inc.</div>
+                                <div style="font-size: 12px; color: var(--text-muted);"><span class="qty-label">5</span> Shares</div>
+                            </td>
                             <td class="down">-2.40%</td>
                             <td><span class="badge badge-bearish">Bearish</span></td>
+                            <td style="font-weight: 600;">$240.00</td>
+                            <td class="total-invested" style="font-weight: 600;">$1,200.00</td>
+                            <td class="up" style="font-weight: 600;">+$273.50</td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <button class="action-btn btn-plus" onclick="openTradeModal(this, 'plus')"><i class="fa fa-plus"></i></button>
+                                <button class="action-btn btn-minus" onclick="openTradeModal(this, 'minus')"><i class="fa fa-minus"></i></button>
+                            </td>
                         </tr>
-                        <tr>
+                        <tr data-symbol="NVDA" data-name="NVIDIA Corp." data-price="450.00" data-owned="8">
                             <td><span class="symbol-tag">NVDA</span></td>
-                            <td>NVIDIA Corp.</td>
+                            <td>
+                                <div style="font-weight: 600;">NVIDIA Corp.</div>
+                                <div style="font-size: 12px; color: var(--text-muted);"><span class="qty-label">8</span> Shares</div>
+                            </td>
                             <td class="up">+4.15%</td>
                             <td><span class="badge badge-bullish">Bullish</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="symbol-tag">MSFT</span></td>
-                            <td>Microsoft Corp.</td>
-                            <td class="up">+0.45%</td>
-                            <td><span class="badge badge-neutral">Neutral</span></td>
+                            <td style="font-weight: 600;">$450.00</td>
+                            <td class="total-invested" style="font-weight: 600;">$3,600.00</td>
+                            <td class="up" style="font-weight: 600;">+$1,120.00</td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <button class="action-btn btn-plus" onclick="openTradeModal(this, 'plus')"><i class="fa fa-plus"></i></button>
+                                <button class="action-btn btn-minus" onclick="openTradeModal(this, 'minus')"><i class="fa fa-minus"></i></button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -212,18 +298,119 @@
     </div>
 </div>
 
+<div id="tradeModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">Modify Position</h3>
+            <p id="modalStockInfo"></p>
+        </div>
+        
+        <div class="input-container">
+            <label>Quantity of Shares</label>
+            <input type="number" id="tradeQuantity" value="1" min="1">
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-confirm" id="confirmActionBtn" onclick="executeTrade()">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<div id="successToast" class="toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toastMessage">Trade successfully completed!</span>
+</div>
+
 <script>
+    let activeRow = null;
+    let activeAction = '';
+    const apikey = `V58XXMSS1AR1L8TK`;
+
+    function showToast(message) {
+        const toast = document.getElementById('successToast');
+        document.getElementById('toastMessage').innerText = message;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    function openTradeModal(button, action) {
+        activeRow = button.closest('tr');
+        activeAction = action;
+        
+        const symbol = activeRow.dataset.symbol;
+        const name = activeRow.dataset.name;
+        const owned = activeRow.dataset.owned;
+
+        document.getElementById('modalTitle').innerText = action === 'plus' ? 'Add Shares' : 'Sell Shares';
+        document.getElementById('modalStockInfo').innerText = `${name} (${symbol}) • Currently holding: ${owned}`;
+        document.getElementById('tradeModal').style.display = 'flex';
+        document.getElementById('tradeQuantity').focus();
+    }
+
+    function closeModal() {
+        document.getElementById('tradeModal').style.display = 'none';
+        document.getElementById('tradeQuantity').value = 1;
+    }
+
+    function executeTrade() {
+        const quantityInput = document.getElementById('tradeQuantity');
+        const changeAmount = parseInt(quantityInput.value);
+        
+        if (isNaN(changeAmount) || changeAmount <= 0) {
+            alert("Please enter a valid quantity.");
+            return;
+        }
+
+        let currentOwned = parseInt(activeRow.dataset.owned);
+        const pricePerShare = parseFloat(activeRow.dataset.price);
+        const symbol = activeRow.dataset.symbol;
+
+        if (activeAction === 'plus') {
+            currentOwned += changeAmount;
+            showToast(`Added ${changeAmount} shares of ${symbol}`);
+        } else {
+            if (changeAmount > currentOwned) {
+                alert("Error: You cannot sell more shares than you own.");
+                return;
+            }
+            currentOwned -= changeAmount;
+            showToast(`Sold ${changeAmount} shares of ${symbol}`);
+        }
+
+        if (currentOwned <= 0) {
+            activeRow.style.transition = '0.3s';
+            activeRow.style.opacity = '0';
+            activeRow.style.transform = 'translateX(20px)';
+            setTimeout(() => activeRow.remove(), 300);
+        } else {
+            activeRow.dataset.owned = currentOwned;
+            activeRow.querySelector('.qty-label').innerText = currentOwned;
+            
+            const newValue = (currentOwned * pricePerShare).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            });
+            activeRow.querySelector('.total-invested').innerText = newValue;
+        }
+        closeModal();
+    }
+
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('tradeModal')) closeModal();
+    }
+
     function generatePDF() {
         const element = document.getElementById('report-area');
         const opt = {
-            margin:       10,
-            filename:     'StockView_Performance_Report.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2 }, // Higher scale = better quality
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            margin: 10,
+            filename: 'StockView_Performance_Report.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
-
-        // Run the conversion
         html2pdf().set(opt).from(element).save();
     }
 </script>
